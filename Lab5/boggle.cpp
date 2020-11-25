@@ -12,6 +12,7 @@ private:
 public:
     char **checkboard;
     int score;
+    Lexicon total_word;
     Lexicon Unfinded_word;
     int AIscore = 0;
     string filename = "EnglishWords.txt";
@@ -22,14 +23,33 @@ public:
     Boggle(int N);
     ~Boggle();
     bool check(std::string word);
-    bool findPath(std::string word);
     void AIround();
     void AIfound(int i,int j,string Word,bool **mark);
-    bool solvePath(int i,int j,std::string word,int wordPos,bool **mark);
+    void findALL();
     void Print();
     bool checkFounded(string word);
    };
 
+    void Boggle::findALL(){
+        for(int i = 0;i < size; ++i){
+            for(int j = 0;j < size; ++j){
+                bool **mark;
+                mark = new bool* [size];
+                 for(int i = 0; i < size; ++i){
+                     mark[i] = new bool [size];
+                     for(int j = 0; j < size; ++j){
+                         mark[i][j] = false;
+                     }
+                 }
+                 string Word;
+                 AIfound(i,j,Word,mark);
+                 for(int k = 0;k < size; ++k){
+                     delete [] mark[k];
+                 }
+                 delete [] mark;
+            }
+        }
+    }
 
     Boggle::Boggle(int N){
         size = N;
@@ -57,7 +77,7 @@ public:
            std::cout << word << " is not a word." << endl;
            return false;
        }
-        if(!findPath(word)){
+        if(!total_word.contains(word)){
             std::cout << word << " is not on board." << endl;
             return false;
         }
@@ -69,82 +89,6 @@ public:
         }
         return true;
    }
-
-   bool Boggle::solvePath(int i,int j,std::string word,int wordPos,bool **mark){
-       if(wordPos == word.size()) return true;
-       mark[i][j] = true;
-       if(i - 1 >= 0){
-           if(j - 1 >= 0 && !mark[i - 1][j - 1] && checkboard[i - 1][j - 1] == word[wordPos]){
-               if(solvePath(i - 1,j - 1,word,wordPos++,mark));
-               {
-                   return true;
-               }
-           }
-           if(!mark[i - 1][j] && checkboard[i - 1][j] == word[wordPos]){
-               if(solvePath(i - 1,j,word,wordPos++,mark)){
-                   return true;
-               }
-           }
-           if(j + 1 < size && !mark[i - 1][j + 1] && checkboard[i - 1][j + 1] == word[wordPos]){
-               if(solvePath(i - 1,j + 1,word,wordPos++,mark))
-               return true;
-           }
-       }
-       if(j - 1 >= 0 && !mark[i][j - 1] && checkboard[i][j - 1] == word[wordPos]){
-           if(solvePath(i,j - 1,word,wordPos++,mark));
-           return true;
-       }
-       if(j + 1 < size && !mark[i][j + 1] && checkboard[i][j + 1] == word[wordPos]){
-           if(solvePath(i,j + 1,word,wordPos++,mark));
-           return true;
-       }
-       if(i + 1 < size){
-           if(j - 1 >= 0 && !mark[i + 1][j - 1] && checkboard[i + 1][j - 1] == word[wordPos]){
-               if(solvePath(i + 1,j - 1,word,wordPos++,mark));
-               {
-                   return true;
-               }
-           }
-           if(!mark[i + 1][j] && checkboard[i + 1][j] == word[wordPos]){
-               if(solvePath(i + 1,j,word,wordPos++,mark)){
-                   return true;
-               }
-           }
-           if(j + 1 < size && !mark[i + 1][j + 1] && checkboard[i + 1][j + 1] == word[wordPos]){
-               if(solvePath(i + 1,j + 1,word,wordPos++,mark));
-               return true;
-           }
-       }
-       mark[i][j] = false;
-       return false;
-   }
-
-   bool Boggle::findPath(std::string word){
-       bool **mark;
-       mark = new bool* [size];
-       transform(word.begin(),word.end(),word.begin(),::toupper);
-        for(int i = 0; i < size; ++i){
-            mark[i] = new bool [size];
-            for(int j = 0; j < size; ++j){
-                mark[i][j] = false;
-            }
-        }
-       for(int i = 0;i < size; ++i){
-           for(int j = 0;j < size; ++j){
-               if(checkboard[i][j] == word[0]){
-                    if(solvePath(i,j,word,1,mark)){
-                        return true;
-                    }
-           }
-       }
-       }
-       for(int k = 0; k < size; ++ k){
-           delete [] mark[k];
-       }
-       delete [] mark;
-       return false;
-   }
-
 
    void Boggle::Print(){
        for(int i = 0; i < size; ++i){
@@ -169,8 +113,8 @@ public:
    void Boggle::AIfound(int i, int j, string Word, bool **mark){
        Word += checkboard[i][j];
        if(!eLexicon.containsPrefix(Word)) return;
-       if(Word.size() >= 4 && eLexicon.contains(Word) && !checkFounded(Word)){
-               Unfinded_word.add(Word);
+       if(Word.size() >= 4 && eLexicon.contains(Word)){
+               total_word.add(Word);
        }
        mark[i][j] = true;
        if(i - 1 >= 0){
@@ -206,32 +150,32 @@ public:
    }
 
     void Boggle::AIround(){
-        for(int i = 0;i < size; ++i){
-            for(int j = 0;j < size; ++j){
-                bool **mark;
-                mark = new bool* [size];
-                 for(int i = 0; i < size; ++i){
-                     mark[i] = new bool [size];
-                     for(int j = 0; j < size; ++j){
-                         mark[i][j] = false;
-                     }
-                 }
-                 string Word;
-                 AIfound(i,j,Word,mark);
-                 for(int k = 0;k < size; ++k){
-                     delete [] mark[k];
-                 }
-                 delete [] mark;
-            }
+        bool flag[Unfinded_word.size()];
+        for(int i = 0; i < Unfinded_word.size();++i){
+            flag[i] = true;
         }
+        int count = 0;
         for(auto i: Unfinded_word){
-            AIscore += i.size() - 3;
+            for(int j = 0;j < Finded_Word.size(); ++j){
+                if(i == Finded_Word[j]) {
+                    flag[count] = false;
+                    break;
+                }
+            }
+            if(flag[count]){
+                AIscore += i.size() - 3;
+            }
+            count++;
         }
+        count = 0;
         cout << "Computer Score: " << AIscore << endl;
         cout << "Computer Words: ";
         for(auto i : Unfinded_word){
+            if(flag[count]){
             transform(i.begin(),i.end(),i.begin(),::toupper);
             cout << i << " ";
+            }
+            count++;
         }
     }
 
@@ -244,6 +188,8 @@ int main(){
         cin >> s;
         B.checkboard[i] = s;
     }
+    B.findALL();
+    B.Unfinded_word = B.total_word;
     while(true){
         B.Print();
         string command;
