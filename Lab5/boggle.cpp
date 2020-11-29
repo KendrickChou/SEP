@@ -82,6 +82,7 @@ public:
             return false;
         }
         for(int i = 0; i < Finded_Word.size(); ++i){
+            transform(word.begin(),word.end(),word.begin(),::tolower);
             if(Finded_Word[i] == word){
                 std::cout << word << " is already found." << endl;
                 return false;
