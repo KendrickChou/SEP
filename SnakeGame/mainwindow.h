@@ -28,12 +28,7 @@ signals:
     void show_new_Game();
 private:
     Ui::MainWindow *ui;
-    QLabel *Begin_label;
-    QLabel *Exit_label;
-    QLabel *Archive_label;
-    QPushButton *Begin_botton;
-    QPushButton *Exit_botton;
-    QPushButton *Archive_botton;
+    void set_Button();
     GameWindow *gwindow;
 };
 #endif // MAINWINDOW_H

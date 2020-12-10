@@ -1,5 +1,8 @@
 <RCC>
-    <qresource prefix="/new/prefix1">
+    <qresource prefix="/images">
         <file>icons/dialog.png</file>
+        <file>icons/mainwindow.gif</file>
+        <file>icons/ranking.png</file>
+        <file>icons/settings.png</file>
     </qresource>
 </RCC>

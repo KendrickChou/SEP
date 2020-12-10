@@ -3,32 +3,25 @@
 #include <QLabel>
 #include "mainwindow.h"
 #include <ui_mainwindow.h>
+#include <QMovie>
+#include <QBitmap>
 
 MainWindow::MainWindow(QWidget *parent):
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
     setWindowTitle("Snake");
     setMaximumSize(800,800);
     setMinimumSize(300,300);
-    setStyleSheet("backgroung::white");
 
-    Begin_botton = new QPushButton(this);
-    Begin_botton->setText("New Game");
-    Begin_botton->move(350,200);
-    connect(Begin_botton,SIGNAL(clicked()),this,SLOT(new_Game()));
+    ui->label->setStyleSheet("background-color:rgb(232,232,232)");
+    QMovie *movie = new QMovie(":/images/icons/mainwindow.gif");
+    movie->setScaledSize(ui->gif->size());
+    ui->gif->setMovie(movie);
+    movie->start();
 
-    Archive_botton = new QPushButton(this);
-    Archive_botton->setText("Continue");
-    Archive_botton->move(350,300);
-    connect(Archive_botton,SIGNAL(clicked()),this,SLOT(read_Archive()));
-
-    Exit_botton = new QPushButton(this);
-    Exit_botton->setText("Exit");
-    Exit_botton->move(350,400);
-    connect(Exit_botton,SIGNAL(clicked()),this,SLOT(Exit()));
+    set_Button();
 
     gwindow = new GameWindow(this);
     connect(this,SIGNAL(show_new_Game()),gwindow,SLOT(receive_New_Game()));
@@ -50,5 +43,75 @@ void MainWindow::Exit(){
 void MainWindow::read_Archive(){
 
 }
+
+void MainWindow::set_Button(){
+    ui->Begin_button->setStyleSheet("QPushButton{background-color:rgb(255,99,71);border-radius:20px;"
+                                    "background-attachment: fixed;font-family: Microsoft YaHei;font-size: 25px; color:rgb(255,255,255)}"
+                                    );
+    connect(ui->Begin_button,SIGNAL(clicked()),this,SLOT(new_Game()));
+
+    ui->Archieve_Button->setStyleSheet("QPushButton{background-color:rgb(255,99,71);border-radius:20px;"
+                                       "background-attachment: fixed;font-family: Microsoft YaHei;font-size: 25px; color:rgb(255,255,255)}"
+                                       );
+    connect(ui->Archieve_Button,SIGNAL(clicked()),this,SLOT(read_Archive()));
+
+    ui->Exit_Button->setStyleSheet("QPushButton{background-color:rgb(255,99,71);border-radius:20px;"
+                                   "background-attachment: fixed;font-family: Microsoft YaHei;font-size: 25px; color:rgb(255,255,255)}"
+                                   );
+    connect(ui->Exit_Button,SIGNAL(clicked()),this,SLOT(Exit()));
+
+//    ui->rank->setStyleSheet("QPushButton{background-color:rgb(255,99,71);border-radius:10px;font-family: Microsoft YaHei;font-size: 10px; color:rgb(255,255,255)}"
+//                                );
+
+//    ui->rank->setStyleSheet("QPushButton{background-color:rgb(255,99,71);border-radius:10px;font-family: Microsoft YaHei;font-size: 10px; color:rgb(255,255,255)}"
+//                                );
+
+//    ui->help->setStyleSheet("QPushButton{background-color:rgb(255,99,71);border-radius:10px;font-family: Microsoft YaHei;font-size: 10px; color:rgb(255,255,255)}"
+//                                );
+    QPixmap settings_map,rank_map,press_image,release_map;
+    settings_map.load(":/images/icons/settings.png");
+    release_map = settings_map.scaled(50,50,Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    press_image = settings_map.scaled(45,45,Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    ui->settings->resize(release_map.size());
+    ui->settings->setIcon(release_map);
+    ui->settings->setIconSize(release_map.size());
+    ui->settings->setMask(release_map.mask());
+    connect(ui->settings, &QPushButton::pressed, [=](){
+        ui->settings->resize(press_image.size());
+        ui->settings->setIcon(press_image);
+        ui->settings->setIconSize(press_image.size());
+        ui->settings->setMask(press_image.mask());
+    });
+
+    connect(ui->settings, &QPushButton::released, [=](){
+        ui->settings->resize(release_map.size());
+        ui->settings->setIcon(release_map);
+        ui->settings->setIconSize(release_map.size());
+        ui->settings->setMask(release_map.mask());
+    });
+
+    rank_map.load(":/images/icons/ranking.png");
+    release_map = rank_map.scaled(50,50,Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    press_image = rank_map.scaled(45,45,Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    ui->rank->resize(release_map.size());
+    ui->rank->setIcon(release_map);
+    ui->rank->setIconSize(release_map.size());
+    ui->rank->setMask(release_map.mask());
+    connect(ui->rank, &QPushButton::pressed, [=](){
+        ui->rank->resize(press_image.size());
+        ui->rank->setIcon(press_image);
+        ui->rank->setIconSize(press_image.size());
+        ui->rank->setMask(press_image.mask());
+    });
+
+    connect(ui->rank, &QPushButton::released, [=](){
+        ui->rank->resize(release_map.size());
+        ui->rank->setIcon(release_map);
+        ui->rank->setIconSize(release_map.size());
+        ui->rank->setMask(release_map.mask());
+    });
+}
+
+
 
 

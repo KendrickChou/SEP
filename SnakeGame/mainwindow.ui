@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -13,8 +16,116 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
-  <widget class="QMenuBar" name="menubar"/>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="Begin_button">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>200</y>
+      <width>191</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>New Game</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Archieve_Button">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>290</y>
+      <width>191</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Continue</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Exit_Button">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>380</y>
+      <width>191</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Exit</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="gif">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>20</y>
+      <width>211</width>
+      <height>131</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>801</width>
+      <height>571</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="settings">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>470</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="rank">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>470</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <zorder>label</zorder>
+   <zorder>gif</zorder>
+   <zorder>Begin_button</zorder>
+   <zorder>Archieve_Button</zorder>
+   <zorder>Exit_Button</zorder>
+   <zorder>settings</zorder>
+   <zorder>rank</zorder>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
