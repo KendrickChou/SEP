@@ -4,10 +4,12 @@
 #include <QEvent>
 #include <QPainter>
 #include "GameWindow.h"
-#include <ui_mainwindow.h>
+#include <ui_GameWindow.h>
 #include <QHBoxLayout>
 #include <QGraphicsRectItem>
 #include <QStyleOptionGraphicsItem>
+#include <QBitmap>
+#include <string>
 
 /*-----------------------public function------------------*/
 
@@ -16,14 +18,17 @@ const int MAP_GRID_SIZE = 20;
 
 GameWindow::GameWindow(QWidget *parent)
     :QDialog(parent),
+      ui(new Ui::GameWindow)
 {
+    ui->setupUi(this);
+    setWindowTitle("Snake");
+
     Game_Scene = new QGraphicsScene(this);
     Game_Scene->setBackgroundBrush(QBrush(QColor(Qt::black)));
-    Game_View = new QGraphicsView(Game_Scene,this);
-    Game_Scene->setSceneRect(-403,-403,806,806);
+    ui->Game_View->setScene(Game_Scene);
+
     mySnake = new Snake;
     myFood = new Food;
-
     creat_Map();
     creat_Wall();
     set_Snake();
@@ -34,17 +39,15 @@ GameWindow::GameWindow(QWidget *parent)
     Game_Scene->addItem(myFood->Item_Food[2]);
     Game_Scene->update();
 
-    QHBoxLayout* main_Layout = new QHBoxLayout;
-    main_Layout->addWidget(Game_View);
-    setLayout(main_Layout);
-    main_Layout->setSizeConstraint(QLayout::SetFixedSize);
 
+    connect(ui->startButton,SIGNAL(clicked(bool)),mySnake,SLOT(startMove()));
+    connect(ui->pauseButton,SIGNAL(clicked(bool)),mySnake,SLOT(pauseMove()));
     connect(mySnake->Clock,SIGNAL(timeout()),this,SLOT(refresh_Scene()));
     connect(mySnake,&Snake::game_over,this,&GameWindow::GameOver);
 }
 
 GameWindow::~GameWindow(){
-
+    delete ui;
 }
 
 void GameWindow::creat_Map(){
@@ -113,6 +116,36 @@ void GameWindow::receive_New_Game(){
 }
 
 void GameWindow::refresh_Scene(){
+    QString Scorestring  = "Score: ";
+    QString ScoreNum = QString::number(mySnake->score);
+    Scorestring.append(ScoreNum);
+    ui->Scoreboard->setText(Scorestring);
+
+    QString Lifestring = "Life: ";
+    QString LifeNum = QString::number(mySnake->life);
+    Lifestring.append(LifeNum);
+    ui->Lifeboard->setText(Lifestring);
+
+    QString Speedstring = "Speed: ";
+    QString Speedlevel;
+    switch (mySnake->speed) {
+    case 100:
+        Speedlevel = "Normal";
+        break;
+    case 130:
+        Speedlevel = "SLOW";
+        break;
+    case 70:
+        Speedlevel = "High";
+        break;
+    case 40:
+        Speedlevel = "SHigh";
+        break;
+    }
+    Speedstring.append(Speedlevel);
+    ui->Speedboard->setText(Speedstring);
+
+
     mySnake->moveSnake();
     mySnake->check_eat(myFood);
     Game_Scene->update();

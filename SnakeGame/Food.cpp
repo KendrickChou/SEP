@@ -11,6 +11,9 @@ void Food::setFood(int i){
         int randomY = qrand() % 40 - 20;
         int randomProperty = qrand() % 10;
         switch (randomProperty) {
+        case 0:
+            Food_Property[i] = el;
+            break;
         case 1:
             Food_Property[i] = su;
             break;
@@ -27,7 +30,7 @@ void Food::setFood(int i){
 void Food::setFoodColor(int i){
     switch (Food_Property[i]) {
     case n:
-        Item_Food[i]->setBrush(QBrush(QColor(Qt::green)));
+        Item_Food[i]->setBrush(QBrush(QColor(Qt::yellow)));
         break;
     case su:
         Item_Food[i]->setBrush(QBrush(QColor(Qt::red)));
@@ -35,6 +38,8 @@ void Food::setFoodColor(int i){
     case sd:
         Item_Food[i]->setBrush(QBrush(QColor(Qt::blue)));
         break;
+    case el:
+        Item_Food[i]->setBrush(QBrush(QColor(Qt::green)));
     }
 }
 

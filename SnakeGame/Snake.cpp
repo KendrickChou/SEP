@@ -13,7 +13,6 @@ void Snake::setSnake(){
 
 Snake::Snake(){
     Clock = new QTimer;
-    this->setIntetval(100);
     Item_Snake = new QGraphicsPathItem;
     Item_Snake->setBrush(QBrush(QColor(Qt::black)));
         for(int i = 0;i < 3;++i){
@@ -35,29 +34,41 @@ void Snake::moveSnake(){
     case left:
         head.setX(head.x() - 1);
         if(head.x() < -20) {
-            emit game_over();
-            return;
+            if(--life < 1){
+                emit game_over();
+                return;
+            }
+            else resetSnake();
         }
         break;
     case right:
         head.setX(head.x() + 1);
-        if(head.x() > 20) {
-            emit game_over();
-            return;
+        if(head.x() >= 20) {
+            if(--life < 1){
+                emit game_over();
+                return;
+            }
+            else resetSnake();
         }
         break;
     case up:
         head.setY(head.y() - 1);
         if(head.y() < -20) {
-            emit game_over();
-            return;
+            if(--life < 1){
+                emit game_over();
+                return;
+            }
+            else resetSnake();
         }
         break;
     case down:
         head.setY(head.y() + 1);
-        if(head.y() > 20){
-            emit game_over();
-            return;
+        if(head.y() >= 20 ){
+            if(--life < 1){
+                emit game_over();
+                return;
+            }
+            else resetSnake();
         }
         break;
     default:
@@ -65,8 +76,11 @@ void Snake::moveSnake(){
     }
 
     if(Snake_Body.contains(head)){
-        emit game_over();
-        return;
+        if(--life < 1){
+            emit game_over();
+            return;
+        }
+        else resetSnake();
     }
 
     if(eatflag){
@@ -78,6 +92,15 @@ void Snake::moveSnake(){
 
     Snake_Body.push_front(head);
     this->setSnake();
+}
+
+bool Snake::check_overlap(QGraphicsRectItem *food){
+        for(auto i : Snake_Body){
+            if(i.x() * Snake_Unit_Size == food->pos().x() && (i.y() * Snake_Unit_Size) == food->pos().y()){
+                return false;
+            }
+        }
+        return true;
 }
 
 void Snake::check_eat(Food* food){
@@ -94,9 +117,17 @@ void Snake::check_eat(Food* food){
                 speed -= 30;
                 this->setIntetval(speed);
             }
-            food->setFood(i);// remember to make sure the food is not in the snake body
+            if(p == el){
+                ++life;
+            }
+            food->setFood(i);
+            while(!check_overlap(food->Item_Food[i])){
+                food->setFood(i);
+            }
             food->setFoodColor(i);
+            ++score;
             eatflag = false;
+            return;
         }
     }
     eatflag = true;
@@ -107,3 +138,26 @@ void Snake::setIntetval(int speed){
     Clock->start();
 }
 
+void Snake::startMove(){
+    setIntetval(speed);
+}
+
+void Snake::pauseMove(){
+    Clock->stop();
+}
+
+void Snake::resetSnake(){
+    Clock->stop();
+    Snake_Body.clear();
+//    for(int i = 0;i < 3;++i){
+//        QPoint BodyUnit;
+//        BodyUnit.setX(0);
+//        BodyUnit.setY(i);
+//        Snake_Body.append(BodyUnit);
+//    }
+    QPoint BodyUnit;
+    BodyUnit.setX(0);
+    BodyUnit.setY(1);
+    Snake_Body.append(BodyUnit);
+    setSnake();
+}

@@ -6,13 +6,17 @@
 #include <QTimer>
 #include <QPushButton>
 #include <QMouseEvent>
-#include <ui_mainwindow.h>
+#include "ui_GameWindow.h"
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QGraphicsItem>
 #include "Snake.h"
 #include "Food.h"
 #include <QPoint>
+
+namespace Ui {
+class GameWindow;
+}
 
 class GameWindow:public QDialog
 {
@@ -36,7 +40,7 @@ private:
     QGraphicsView* Game_View;
     Snake *mySnake;
     Food *myFood;
-    Ui::MainWindow *ui;
+    Ui::GameWindow *ui;
 signals:
     void newgame();
 };

@@ -4,5 +4,9 @@
         <file>icons/mainwindow.gif</file>
         <file>icons/ranking.png</file>
         <file>icons/settings.png</file>
+        <file>icons/pause.png</file>
+        <file>icons/Life.png</file>
+        <file>icons/Score.png</file>
+        <file>icons/start.png</file>
     </qresource>
 </RCC>

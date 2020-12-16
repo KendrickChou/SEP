@@ -26,6 +26,7 @@ HEADERS += \
     wall.h
 
 FORMS += \
+    GameWindow.ui \
     mainwindow.ui
 
 # Default rules for deployment.
