@@ -24,8 +24,12 @@ private slots:
     void new_Game();
     void read_Archive();
     void Exit();
+    void Enter_settings();
+    void new_gwindow();
 signals:
     void show_new_Game();
+    void rebegin_Game();
+    void show_settings();
 private:
     Ui::MainWindow *ui;
     void set_Button();

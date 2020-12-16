@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent):
 {
     ui->setupUi(this);
     setWindowTitle("Snake");
-    setMaximumSize(800,800);
+    setMaximumSize(810,810);
     setMinimumSize(300,300);
 
     ui->label->setStyleSheet("background-color:rgb(232,232,232)");
@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent):
 
     gwindow = new GameWindow(this);
     connect(this,SIGNAL(show_new_Game()),gwindow,SLOT(receive_New_Game()));
+    connect(gwindow,SIGNAL(newgame()),this,SLOT(new_gwindow()));
 }
 
 MainWindow::~MainWindow(){
@@ -36,12 +37,24 @@ void MainWindow::new_Game(){
     emit show_new_Game();
 }
 
+void MainWindow::Enter_settings(){
+    this->hide();
+    emit show_settings();
+}
+
 void MainWindow::Exit(){
     this->close();
 }
 
 void MainWindow::read_Archive(){
 
+}
+
+void MainWindow::new_gwindow(){
+    GameWindow *ngwindow = new GameWindow(this);
+    gwindow = ngwindow;
+    connect(this,SIGNAL(rebegin_Game()),ngwindow,SLOT(receive_New_Game()));
+    emit rebegin_Game();
 }
 
 void MainWindow::set_Button(){
@@ -89,6 +102,8 @@ void MainWindow::set_Button(){
         ui->settings->setIconSize(release_map.size());
         ui->settings->setMask(release_map.mask());
     });
+
+    connect(ui->settings,SIGNAL(clicked()),this,SLOT(Enter_settings()));
 
     rank_map.load(":/images/icons/ranking.png");
     release_map = rank_map.scaled(50,50,Qt::IgnoreAspectRatio, Qt::SmoothTransformation);

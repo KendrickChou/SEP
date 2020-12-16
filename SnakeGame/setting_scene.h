@@ -1,0 +1,4 @@
+#ifndef SETTING_SCENE_H
+#define SETTING_SCENE_H
+
+#endif // SETTING_SCENE_H

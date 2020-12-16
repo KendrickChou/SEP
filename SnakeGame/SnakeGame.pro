@@ -9,13 +9,21 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Food.cpp \
     GameWindow.cpp \
+    Snake.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    setting_scene.cpp \
+    wall.cpp
 
 HEADERS += \
+    Food.h \
     GameWindow.h \
-    mainwindow.h
+    Snake.h \
+    mainwindow.h \
+    setting_scene.h \
+    wall.h
 
 FORMS += \
     mainwindow.ui

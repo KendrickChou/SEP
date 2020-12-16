@@ -10,12 +10,9 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QGraphicsItem>
-#include <QGraphicsRectItem>
-#include <QGraphicsPathItem>
-#include <QList>
+#include "Snake.h"
+#include "Food.h"
 #include <QPoint>
-
-enum Move_dir{left,right,up,down};
 
 class GameWindow:public QDialog
 {
@@ -26,26 +23,22 @@ public:
     void creat_Map();
     void creat_Wall();
     void set_Snake();
-    bool check_eat_Food();
     void keyPressEvent(QKeyEvent *event);
-    void refresh_Snake();
 
 private slots:
     void receive_New_Game();
     void refresh_Scene();
-    void set_Food();
     void GameOver();
+    void NewGame();
 
 private:
-    Move_dir dir = left;
     QGraphicsScene* Game_Scene;
     QGraphicsView* Game_View;
-    QTimer* Clock_Timer;
-    QGraphicsRectItem* Item_Food;
-    QGraphicsPathItem* Item_Snake;
-    QList<QPoint> Snake_Body;
+    Snake *mySnake;
+    Food *myFood;
+    Ui::MainWindow *ui;
 signals:
-    void game_over();
+    void newgame();
 };
 
 #endif // GAMEWINDOW_H

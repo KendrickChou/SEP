@@ -1,12 +1,12 @@
 #include <QGraphicsScene>
 #include <QIcon>
 #include <QTime>
-#include <QtGlobal>
 #include <QEvent>
 #include <QPainter>
 #include "GameWindow.h"
 #include <ui_mainwindow.h>
 #include <QHBoxLayout>
+#include <QGraphicsRectItem>
 #include <QStyleOptionGraphicsItem>
 
 /*-----------------------public function------------------*/
@@ -15,34 +15,32 @@ const int MAP_GRID_NUM = 40;
 const int MAP_GRID_SIZE = 20;
 
 GameWindow::GameWindow(QWidget *parent)
-    :QDialog(parent)
+    :QDialog(parent),
 {
     Game_Scene = new QGraphicsScene(this);
     Game_Scene->setBackgroundBrush(QBrush(QColor(Qt::black)));
     Game_View = new QGraphicsView(Game_Scene,this);
-    Clock_Timer = new QTimer;
-    Game_Scene->setSceneRect(-400,-400,800,800);
-    Item_Snake = new QGraphicsPathItem;
-    Item_Snake->setBrush(QBrush(QColor(Qt::black)));
+    Game_Scene->setSceneRect(-403,-403,806,806);
+    mySnake = new Snake;
+    myFood = new Food;
 
     creat_Map();
     creat_Wall();
-    set_Food();
     set_Snake();
 
-    Game_Scene->addItem(Item_Food);
-    Game_Scene->addItem(Item_Snake);
+    Game_Scene->addItem(mySnake->Item_Snake);
+    Game_Scene->addItem(myFood->Item_Food[0]);
+    Game_Scene->addItem(myFood->Item_Food[1]);
+    Game_Scene->addItem(myFood->Item_Food[2]);
+    Game_Scene->update();
 
     QHBoxLayout* main_Layout = new QHBoxLayout;
     main_Layout->addWidget(Game_View);
     setLayout(main_Layout);
     main_Layout->setSizeConstraint(QLayout::SetFixedSize);
 
-    Clock_Timer->setInterval(100);
-    Clock_Timer->start();
-
-    connect(Clock_Timer,SIGNAL(timeout()),this,SLOT(refresh_Scene()));
-    connect(this,SIGNAL(game_over()),this,SLOT(GameOver()));
+    connect(mySnake->Clock,SIGNAL(timeout()),this,SLOT(refresh_Scene()));
+    connect(mySnake,&Snake::game_over,this,&GameWindow::GameOver);
 }
 
 GameWindow::~GameWindow(){
@@ -63,90 +61,45 @@ void GameWindow::creat_Map(){
 }
 
 void GameWindow::creat_Wall(){
+    QGraphicsRectItem* upWall_GraphicsRectItem = new QGraphicsRectItem(-403, -403, MAP_GRID_NUM*MAP_GRID_SIZE + 6, 3);
+        QGraphicsRectItem* downWall_GraphicsRectItem = new QGraphicsRectItem(-403, 400, MAP_GRID_NUM*MAP_GRID_SIZE + 6, 3);
+        QGraphicsRectItem* leftWall_GraphicsRectItem = new QGraphicsRectItem(-403, -400, 3, MAP_GRID_NUM*MAP_GRID_SIZE);
+        QGraphicsRectItem* rightWall_GraphicsRectItem = new QGraphicsRectItem(400, -400, 3, MAP_GRID_NUM*MAP_GRID_SIZE);
+        Game_Scene->addItem(upWall_GraphicsRectItem);
+        Game_Scene->addItem(downWall_GraphicsRectItem);
+        Game_Scene->addItem(leftWall_GraphicsRectItem);
+        Game_Scene->addItem(rightWall_GraphicsRectItem);
 
-}
-
-bool GameWindow::check_eat_Food(){
-    QPoint head = Snake_Body.first();
-    if((head.x() * MAP_GRID_SIZE) == Item_Food->pos().x() && (head.y() * MAP_GRID_SIZE) == Item_Food->pos().y()){
-        this->set_Food();
-        return false;
-    }
-    return true;
+        upWall_GraphicsRectItem->setBrush(QColor(Qt::black));
+        downWall_GraphicsRectItem->setBrush(QColor(Qt::black));
+        leftWall_GraphicsRectItem->setBrush(QColor(Qt::black));
+        rightWall_GraphicsRectItem->setBrush(QColor(Qt::black));
 }
 
 void GameWindow::set_Snake(){
-    if(Snake_Body.isEmpty()){
-        for(int i = 0;i < 3;++i){
-            QPoint BodyUnit;
-            BodyUnit.setX(0);
-            BodyUnit.setY(i);
-            Snake_Body.append(BodyUnit);
-        }
-    }
-    else Snake_Body;
-
-    QPainterPath path;
-    for(auto i : Snake_Body){
-        path.addRect(i.x() * MAP_GRID_SIZE,i.y() * MAP_GRID_SIZE,MAP_GRID_SIZE,MAP_GRID_SIZE);
-    }
-
-    Item_Snake->setPath(path);
-    Item_Snake->update();
-}
-
-void GameWindow::refresh_Snake(){
-    QPoint head = Snake_Body.first();
-    switch (dir) {
-    case left:
-        head.setX(head.x() - 1);
-        break;
-    case right:
-        head.setX(head.x() + 1);
-        break;
-    case up:
-        head.setY(head.y() - 1);
-        break;
-    case down:
-        head.setY(head.y() + 1);
-        break;
-    default:
-        break;
-    }
-
-    if(Snake_Body.contains(head)){
-        emit game_over();
-        return;
-    }
-
-    if(check_eat_Food()){
-        Snake_Body.pop_back();
-    }
-
-    Snake_Body.push_front(head);
-    this->set_Snake();
+    mySnake->setSnake();
 }
 
 void GameWindow::keyPressEvent(QKeyEvent *event){
     switch (event->key()) {
     case Qt::Key_W:
-        if(dir != down){
-            dir = up;
+        if(mySnake->dir != down){
+            mySnake->dir = up;
         }
         break;
     case Qt::Key_A:
-        if(dir != right){
-            dir = left;
+        if(mySnake->dir != right){
+            mySnake->dir = left;
         }
         break;
     case Qt::Key_S:
-        if(dir != up){
-         dir = down;
+        if(mySnake->dir != up){
+         mySnake->dir = down;
         }
         break;
     case Qt::Key_D:
-        if(dir != left){
-            dir = right;
+        if(mySnake->dir != left){
+            mySnake->dir = right;
         }
         break;
     default:
@@ -160,22 +113,13 @@ void GameWindow::receive_New_Game(){
 }
 
 void GameWindow::refresh_Scene(){
-    this->refresh_Snake();
-}
-
-void GameWindow::set_Food(){
-    qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
-    int randomX = qrand() % 40 - 20;
-    int randomY = qrand() % 40 - 20;
-    if(Item_Food == nullptr){
-        Item_Food = new QGraphicsRectItem(0,0,MAP_GRID_SIZE,MAP_GRID_SIZE);
-        Item_Food->setBrush(QBrush(QColor(Qt::red)));
-    }
-    Item_Food->setPos(randomX * MAP_GRID_SIZE,randomY * MAP_GRID_SIZE);
+    mySnake->moveSnake();
+    mySnake->check_eat(myFood);
+    Game_Scene->update();
 }
 
 void GameWindow::GameOver(){
-    Clock_Timer->stop();
+    mySnake->Clock->stop();
     QDialog *OverDialog = new QDialog(this);
     OverDialog->resize(200,200);
     QPushButton *cButton = new QPushButton(tr("Continue"));
@@ -186,4 +130,12 @@ void GameWindow::GameOver(){
     btnLayout->addWidget(eButton);
     OverDialog->setLayout(btnLayout);
     OverDialog->show();
+    connect(cButton,SIGNAL(clicked()),this,SLOT(NewGame()));
+    connect(eButton,SIGNAL(clicked()),this,SLOT(close()));
 }
+
+void GameWindow::NewGame(){
+    this->hide();
+    emit newgame();
+}
+
