@@ -14,6 +14,7 @@ SOURCES += \
     Snake.cpp \
     main.cpp \
     mainwindow.cpp \
+    pvpgame.cpp \
     setting_scene.cpp \
     wall.cpp
 
@@ -22,12 +23,14 @@ HEADERS += \
     GameWindow.h \
     Snake.h \
     mainwindow.h \
+    pvpgame.h \
     setting_scene.h \
     wall.h
 
 FORMS += \
     GameWindow.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    pvpgame.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

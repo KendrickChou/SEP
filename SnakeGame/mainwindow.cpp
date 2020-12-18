@@ -26,6 +26,9 @@ MainWindow::MainWindow(QWidget *parent):
     gwindow = new GameWindow(this);
     connect(this,SIGNAL(show_new_Game()),gwindow,SLOT(receive_New_Game()));
     connect(gwindow,SIGNAL(newgame()),this,SLOT(new_gwindow()));
+
+    pgame = new PVPGame(this);
+    connect(this,SIGNAL(show_PVP_Game()),pgame,SLOT(receive_New_Game()));
 }
 
 MainWindow::~MainWindow(){
@@ -35,6 +38,11 @@ MainWindow::~MainWindow(){
 void MainWindow::new_Game(){
     this->hide();
     emit show_new_Game();
+}
+
+void MainWindow::PVP_Game(){
+    this->hide();
+    emit show_PVP_Game();
 }
 
 void MainWindow::Enter_settings(){
@@ -58,20 +66,22 @@ void MainWindow::new_gwindow(){
 }
 
 void MainWindow::set_Button(){
-    ui->Begin_button->setStyleSheet("QPushButton{background-color:rgb(255,99,71);border-radius:20px;"
-                                    "background-attachment: fixed;font-family: Microsoft YaHei;font-size: 25px; color:rgb(255,255,255)}"
-                                    );
+//    ui->Begin_button->setStyleSheet("QPushButton{background-color:rgb(255,99,71);border-radius:20px;"
+//                                    "background-attachment: fixed;font-family: Microsoft YaHei;font-size: 25px; color:rgb(255,255,255)}"
+//                                    );
     connect(ui->Begin_button,SIGNAL(clicked()),this,SLOT(new_Game()));
 
-    ui->Archieve_Button->setStyleSheet("QPushButton{background-color:rgb(255,99,71);border-radius:20px;"
-                                       "background-attachment: fixed;font-family: Microsoft YaHei;font-size: 25px; color:rgb(255,255,255)}"
-                                       );
+//    ui->Archieve_Button->setStyleSheet("QPushButton{background-color:rgb(255,99,71);border-radius:20px;"
+//                                       "background-attachment: fixed;font-family: Microsoft YaHei;font-size: 25px; color:rgb(255,255,255)}"
+//                                       );
     connect(ui->Archieve_Button,SIGNAL(clicked()),this,SLOT(read_Archive()));
 
-    ui->Exit_Button->setStyleSheet("QPushButton{background-color:rgb(255,99,71);border-radius:20px;"
-                                   "background-attachment: fixed;font-family: Microsoft YaHei;font-size: 25px; color:rgb(255,255,255)}"
-                                   );
+//    ui->Exit_Button->setStyleSheet("QPushButton{background-color:rgb(255,99,71);border-radius:20px;"
+//                                   "background-attachment: fixed;font-family: Microsoft YaHei;font-size: 25px; color:rgb(255,255,255)}"
+//                                   );
     connect(ui->Exit_Button,SIGNAL(clicked()),this,SLOT(Exit()));
+
+    connect(ui->PVP_button,SIGNAL(clicked()),this,SLOT(PVP_Game()));
 
 //    ui->rank->setStyleSheet("QPushButton{background-color:rgb(255,99,71);border-radius:10px;font-family: Microsoft YaHei;font-size: 10px; color:rgb(255,255,255)}"
 //                                );

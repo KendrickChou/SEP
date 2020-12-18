@@ -8,5 +8,6 @@
         <file>icons/Life.png</file>
         <file>icons/Score.png</file>
         <file>icons/start.png</file>
+        <file>icons/restart.png</file>
     </qresource>
 </RCC>

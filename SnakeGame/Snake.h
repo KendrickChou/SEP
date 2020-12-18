@@ -14,7 +14,7 @@ enum Move_dir{left,right,up,down};
 class Snake: public QObject{
     Q_OBJECT
 public:
-    Move_dir dir = left;
+    Move_dir dir = up;
     QGraphicsPathItem *Item_Snake;
     QList<QPoint> Snake_Body;
     QTimer* Clock;
@@ -30,6 +30,9 @@ public:
     bool check_overlap(QGraphicsRectItem* food);
     void setIntetval(int speed);
     void resetSnake();
+    void Change_Pos(int x1,int y1,
+                    int x2,int y2,
+                    int x3,int y3);
 
 private slots:
     void startMove();

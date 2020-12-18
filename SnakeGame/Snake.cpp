@@ -14,7 +14,8 @@ void Snake::setSnake(){
 Snake::Snake(){
     Clock = new QTimer;
     Item_Snake = new QGraphicsPathItem;
-    Item_Snake->setBrush(QBrush(QColor(Qt::black)));
+    Item_Snake->setPen(Qt::NoPen);
+    Item_Snake->setBrush(QBrush(QColor::fromRgb(102,205,170)));
         for(int i = 0;i < 3;++i){
             QPoint BodyUnit;
             BodyUnit.setX(0);
@@ -160,4 +161,14 @@ void Snake::resetSnake(){
     BodyUnit.setY(1);
     Snake_Body.append(BodyUnit);
     setSnake();
+}
+
+void Snake::Change_Pos(int x1, int y1, int x2, int y2, int x3, int y3){
+        Snake_Body[0].setX(x1);
+        Snake_Body[0].setY(y1);
+        Snake_Body[1].setX(x2);
+        Snake_Body[1].setY(y2);
+        Snake_Body[2].setX(x3);
+        Snake_Body[2].setY(y3);
+        setSnake();
 }

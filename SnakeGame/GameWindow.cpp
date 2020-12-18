@@ -5,7 +5,6 @@
 #include <QPainter>
 #include "GameWindow.h"
 #include <ui_GameWindow.h>
-#include <QHBoxLayout>
 #include <QGraphicsRectItem>
 #include <QStyleOptionGraphicsItem>
 #include <QBitmap>
@@ -16,17 +15,18 @@
 const int MAP_GRID_NUM = 40;
 const int MAP_GRID_SIZE = 20;
 
+
 GameWindow::GameWindow(QWidget *parent)
     :QDialog(parent),
       ui(new Ui::GameWindow)
 {
     ui->setupUi(this);
-    setWindowTitle("Snake");
+    setWindowTitle("Single Mode");
 
     Game_Scene = new QGraphicsScene(this);
-    Game_Scene->setBackgroundBrush(QBrush(QColor(Qt::black)));
     ui->Game_View->setScene(Game_Scene);
 
+    GGtext = new QGraphicsSimpleTextItem;
     mySnake = new Snake;
     myFood = new Food;
     creat_Map();
@@ -39,9 +39,9 @@ GameWindow::GameWindow(QWidget *parent)
     Game_Scene->addItem(myFood->Item_Food[2]);
     Game_Scene->update();
 
-
     connect(ui->startButton,SIGNAL(clicked(bool)),mySnake,SLOT(startMove()));
     connect(ui->pauseButton,SIGNAL(clicked(bool)),mySnake,SLOT(pauseMove()));
+    connect(ui->restartButton,SIGNAL(clicked(bool)),this,SLOT(restartGame()));
     connect(mySnake->Clock,SIGNAL(timeout()),this,SLOT(refresh_Scene()));
     connect(mySnake,&Snake::game_over,this,&GameWindow::GameOver);
 }
@@ -153,22 +153,38 @@ void GameWindow::refresh_Scene(){
 
 void GameWindow::GameOver(){
     mySnake->Clock->stop();
-    QDialog *OverDialog = new QDialog(this);
-    OverDialog->resize(200,200);
-    QPushButton *cButton = new QPushButton(tr("Continue"));
-    QPushButton *eButton = new QPushButton(tr("Exit"));
-    QHBoxLayout *btnLayout = new QHBoxLayout;
-    btnLayout->setSpacing(60);
-    btnLayout->addWidget(cButton);
-    btnLayout->addWidget(eButton);
-    OverDialog->setLayout(btnLayout);
-    OverDialog->show();
-    connect(cButton,SIGNAL(clicked()),this,SLOT(NewGame()));
-    connect(eButton,SIGNAL(clicked()),this,SLOT(close()));
+    GGtext->setBrush(Qt::black);
+    GGtext->setText("You lose!");
+    GGtext->setFont(QFont("华文琥珀，12"));
+    Game_Scene->addItem(GGtext);
 }
 
 void GameWindow::NewGame(){
     this->hide();
     emit newgame();
+}
+
+void GameWindow::restartGame(){
+    Game_Scene->removeItem(GGtext);
+    Game_Scene->removeItem(mySnake->Item_Snake);
+    Game_Scene->removeItem(myFood->Item_Food[0]);
+    Game_Scene->removeItem(myFood->Item_Food[1]);
+    Game_Scene->removeItem(myFood->Item_Food[2]);
+    Game_Scene->update();
+    delete mySnake;
+    delete myFood;
+    mySnake = new Snake;
+    myFood = new Food;
+    mySnake->setSnake();
+    Game_Scene->addItem(mySnake->Item_Snake);
+    Game_Scene->addItem(myFood->Item_Food[0]);
+    Game_Scene->addItem(myFood->Item_Food[1]);
+    Game_Scene->addItem(myFood->Item_Food[2]);
+    Game_Scene->update();
+    connect(ui->startButton,SIGNAL(clicked(bool)),mySnake,SLOT(startMove()));
+    connect(ui->pauseButton,SIGNAL(clicked(bool)),mySnake,SLOT(pauseMove()));
+    connect(ui->restartButton,SIGNAL(clicked(bool)),this,SLOT(restartGame()));
+    connect(mySnake->Clock,SIGNAL(timeout()),this,SLOT(refresh_Scene()));
+    connect(mySnake,&Snake::game_over,this,&GameWindow::GameOver);
 }
 

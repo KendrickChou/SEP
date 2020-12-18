@@ -20,24 +20,34 @@
    <widget class="QPushButton" name="Begin_button">
     <property name="geometry">
      <rect>
-      <x>280</x>
+      <x>310</x>
       <y>200</y>
-      <width>191</width>
-      <height>71</height>
+      <width>161</width>
+      <height>41</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:rgb(255,99,71);
+border-radius:20px;
+font-family: Microsoft YaHei;font-size: 25px; color:rgb(255,255,255)</string>
+    </property>
     <property name="text">
-     <string>New Game</string>
+     <string>Single Game</string>
     </property>
    </widget>
    <widget class="QPushButton" name="Archieve_Button">
     <property name="geometry">
      <rect>
-      <x>280</x>
-      <y>290</y>
-      <width>191</width>
-      <height>71</height>
+      <x>310</x>
+      <y>320</y>
+      <width>161</width>
+      <height>41</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:rgb(255,99,71);
+border-radius:20px;
+font-family: Microsoft YaHei;font-size: 25px; color:rgb(255,255,255)</string>
     </property>
     <property name="text">
      <string>Continue</string>
@@ -46,11 +56,16 @@
    <widget class="QPushButton" name="Exit_Button">
     <property name="geometry">
      <rect>
-      <x>280</x>
+      <x>310</x>
       <y>380</y>
-      <width>191</width>
-      <height>71</height>
+      <width>161</width>
+      <height>41</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:rgb(255,99,71);
+border-radius:20px;
+font-family: Microsoft YaHei;font-size: 25px; color:rgb(255,255,255)</string>
     </property>
     <property name="text">
      <string>Exit</string>
@@ -59,8 +74,8 @@
    <widget class="QLabel" name="gif">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>20</y>
+      <x>290</x>
+      <y>50</y>
       <width>211</width>
       <height>131</height>
      </rect>
@@ -108,6 +123,24 @@
      <string/>
     </property>
    </widget>
+   <widget class="QPushButton" name="PVP_button">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>260</y>
+      <width>161</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:rgb(255,99,71);
+border-radius:20px;
+font-family: Microsoft YaHei;font-size: 25px; color:rgb(255,255,255)</string>
+    </property>
+    <property name="text">
+     <string>PVP</string>
+    </property>
+   </widget>
    <zorder>label</zorder>
    <zorder>gif</zorder>
    <zorder>Begin_button</zorder>
@@ -115,6 +148,7 @@
    <zorder>Exit_Button</zorder>
    <zorder>settings</zorder>
    <zorder>rank</zorder>
+   <zorder>PVP_button</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -122,7 +156,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>26</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>

@@ -1,51 +1,48 @@
-#ifndef GAMEWINDOW_H
-#define GAMEWINDOW_H
+#ifndef PVPGAME_H
+#define PVPGAME_H
 
-#include <QMainWindow>
 #include <QDialog>
+#include <QMainWindow>
 #include <QTimer>
 #include <QPushButton>
 #include <QMouseEvent>
-#include "ui_GameWindow.h"
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QGraphicsItem>
 #include <QGraphicsSimpleTextItem>
+#include "ui_pvpgame.h"
 #include "Snake.h"
 #include "Food.h"
 #include <QPoint>
 
 namespace Ui {
-class GameWindow;
+class PVPGame;
 }
 
-class GameWindow:public QDialog
+class PVPGame : public QDialog
 {
     Q_OBJECT
+
 public:
-    GameWindow(QWidget *parent);
-    ~GameWindow();
+    explicit PVPGame(QWidget *parent = nullptr);
     void creat_Map();
     void creat_Wall();
     void set_Snake();
     void keyPressEvent(QKeyEvent *event);
-
+    ~PVPGame();
 private slots:
     void receive_New_Game();
-    void refresh_Scene();
+    void refresh_P1();
+    void refresh_P2();
     void GameOver();
-    void NewGame();
-    void restartGame();
 
 private:
+    Ui::PVPGame *ui;
     QGraphicsScene* Game_Scene;
-    QGraphicsSimpleTextItem *GGtext;
-    Snake *mySnake;
+    Snake *P1,*P2;
     Food *myFood;
-    Ui::GameWindow *ui;
-signals:
-    void newgame();
+    QGraphicsSimpleTextItem *GGtext;
 
 };
 
-#endif // GAMEWINDOW_H
+#endif // PVPGAME_H
