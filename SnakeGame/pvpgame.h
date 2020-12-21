@@ -19,6 +19,9 @@ namespace Ui {
 class PVPGame;
 }
 
+//this class is similar to class GameWindow
+//set P1 and P2 respectively
+
 class PVPGame : public QDialog
 {
     Q_OBJECT
@@ -42,7 +45,8 @@ private:
     Snake *P1,*P2;
     Food *myFood;
     QGraphicsSimpleTextItem *GGtext;
-
+signals:
+    void back_Menu();
 };
 
 #endif // PVPGAME_H

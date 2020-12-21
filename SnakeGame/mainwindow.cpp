@@ -13,22 +13,26 @@ MainWindow::MainWindow(QWidget *parent):
     ui->setupUi(this);
     setWindowTitle("Snake");
     setMaximumSize(810,810);
-    setMinimumSize(300,300);
+    setMinimumSize(300,300);//set window size
 
     ui->label->setStyleSheet("background-color:rgb(232,232,232)");
     QMovie *movie = new QMovie(":/images/icons/mainwindow.gif");
     movie->setScaledSize(ui->gif->size());
     ui->gif->setMovie(movie);
-    movie->start();
+    movie->start();//add a gif to menu
 
     set_Button();
 
+    //initial single game mode
     gwindow = new GameWindow(this);
     connect(this,SIGNAL(show_new_Game()),gwindow,SLOT(receive_New_Game()));
-    connect(gwindow,SIGNAL(newgame()),this,SLOT(new_gwindow()));
+    connect(gwindow,SIGNAL(back_Menu()),this,SLOT(show_Menu()));
 
+    //initial PVP mode
     pgame = new PVPGame(this);
     connect(this,SIGNAL(show_PVP_Game()),pgame,SLOT(receive_New_Game()));
+    connect(pgame,SIGNAL(back_Menu()),this,SLOT(show_Menu()));
+
 }
 
 MainWindow::~MainWindow(){
@@ -58,39 +62,24 @@ void MainWindow::read_Archive(){
 
 }
 
-void MainWindow::new_gwindow(){
-    GameWindow *ngwindow = new GameWindow(this);
-    gwindow = ngwindow;
-    connect(this,SIGNAL(rebegin_Game()),ngwindow,SLOT(receive_New_Game()));
-    emit rebegin_Game();
+void MainWindow::show_Menu(){
+    pgame->hide();
+    gwindow->hide();
+    this->show();
 }
 
 void MainWindow::set_Button(){
-//    ui->Begin_button->setStyleSheet("QPushButton{background-color:rgb(255,99,71);border-radius:20px;"
-//                                    "background-attachment: fixed;font-family: Microsoft YaHei;font-size: 25px; color:rgb(255,255,255)}"
-//                                    );
     connect(ui->Begin_button,SIGNAL(clicked()),this,SLOT(new_Game()));
 
-//    ui->Archieve_Button->setStyleSheet("QPushButton{background-color:rgb(255,99,71);border-radius:20px;"
-//                                       "background-attachment: fixed;font-family: Microsoft YaHei;font-size: 25px; color:rgb(255,255,255)}"
-//                                       );
     connect(ui->Archieve_Button,SIGNAL(clicked()),this,SLOT(read_Archive()));
 
-//    ui->Exit_Button->setStyleSheet("QPushButton{background-color:rgb(255,99,71);border-radius:20px;"
-//                                   "background-attachment: fixed;font-family: Microsoft YaHei;font-size: 25px; color:rgb(255,255,255)}"
-//                                   );
     connect(ui->Exit_Button,SIGNAL(clicked()),this,SLOT(Exit()));
 
     connect(ui->PVP_button,SIGNAL(clicked()),this,SLOT(PVP_Game()));
 
-//    ui->rank->setStyleSheet("QPushButton{background-color:rgb(255,99,71);border-radius:10px;font-family: Microsoft YaHei;font-size: 10px; color:rgb(255,255,255)}"
-//                                );
+    connect(ui->settings,SIGNAL(clicked()),this,SLOT(Enter_settings()));
 
-//    ui->rank->setStyleSheet("QPushButton{background-color:rgb(255,99,71);border-radius:10px;font-family: Microsoft YaHei;font-size: 10px; color:rgb(255,255,255)}"
-//                                );
-
-//    ui->help->setStyleSheet("QPushButton{background-color:rgb(255,99,71);border-radius:10px;font-family: Microsoft YaHei;font-size: 10px; color:rgb(255,255,255)}"
-//                                );
+    //set clicked effect
     QPixmap settings_map,rank_map,press_image,release_map;
     settings_map.load(":/images/icons/settings.png");
     release_map = settings_map.scaled(50,50,Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
@@ -113,7 +102,6 @@ void MainWindow::set_Button(){
         ui->settings->setMask(release_map.mask());
     });
 
-    connect(ui->settings,SIGNAL(clicked()),this,SLOT(Enter_settings()));
 
     rank_map.load(":/images/icons/ranking.png");
     release_map = rank_map.scaled(50,50,Qt::IgnoreAspectRatio, Qt::SmoothTransformation);

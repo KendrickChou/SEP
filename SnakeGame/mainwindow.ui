@@ -39,7 +39,7 @@ font-family: Microsoft YaHei;font-size: 25px; color:rgb(255,255,255)</string>
     <property name="geometry">
      <rect>
       <x>310</x>
-      <y>320</y>
+      <y>380</y>
       <width>161</width>
       <height>41</height>
      </rect>
@@ -57,7 +57,7 @@ font-family: Microsoft YaHei;font-size: 25px; color:rgb(255,255,255)</string>
     <property name="geometry">
      <rect>
       <x>310</x>
-      <y>380</y>
+      <y>440</y>
       <width>161</width>
       <height>41</height>
      </rect>
@@ -141,6 +141,24 @@ font-family: Microsoft YaHei;font-size: 25px; color:rgb(255,255,255)</string>
      <string>PVP</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="PVA_button">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>320</y>
+      <width>161</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:rgb(255,99,71);
+border-radius:20px;
+font-family: Microsoft YaHei;font-size: 25px; color:rgb(255,255,255)</string>
+    </property>
+    <property name="text">
+     <string>PVA</string>
+    </property>
+   </widget>
    <zorder>label</zorder>
    <zorder>gif</zorder>
    <zorder>Begin_button</zorder>
@@ -149,6 +167,7 @@ font-family: Microsoft YaHei;font-size: 25px; color:rgb(255,255,255)</string>
    <zorder>settings</zorder>
    <zorder>rank</zorder>
    <zorder>PVP_button</zorder>
+   <zorder>PVA_button</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

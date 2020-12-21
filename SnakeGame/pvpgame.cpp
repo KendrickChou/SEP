@@ -90,6 +90,8 @@ void PVPGame::set_Snake(){
 }
 
 void PVPGame::keyPressEvent(QKeyEvent *event){
+    //P1: W:up A:left S:down D:right
+    //P2:I:up J:left K:down L:right
     switch (event->key()) {
     case Qt::Key_W:
         if(P1->dir != down){
@@ -131,6 +133,10 @@ void PVPGame::keyPressEvent(QKeyEvent *event){
             P2->dir = right;
         }
         break;
+    case Qt::Key_Escape:
+        P1->Clock->stop();
+        P2->Clock->stop();
+        emit back_Menu();
     default:
         break;
     }

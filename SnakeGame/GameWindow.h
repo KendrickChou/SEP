@@ -27,25 +27,23 @@ public:
     ~GameWindow();
     void creat_Map();
     void creat_Wall();
-    void set_Snake();
+    void set_Snake();//draw Snake
     void keyPressEvent(QKeyEvent *event);
 
 private slots:
-    void receive_New_Game();
-    void refresh_Scene();
+    void receive_New_Game();//show a new game when click the single game button in menu
+    void refresh_Scene();//refresh the scene when clock is timeout
     void GameOver();
-    void NewGame();
     void restartGame();
 
 private:
     QGraphicsScene* Game_Scene;
-    QGraphicsSimpleTextItem *GGtext;
+    QGraphicsSimpleTextItem *GGtext;//when GG, show this text
     Snake *mySnake;
     Food *myFood;
     Ui::GameWindow *ui;
 signals:
-    void newgame();
-
+    void back_Menu();//back to the menu
 };
 
 #endif // GAMEWINDOW_H

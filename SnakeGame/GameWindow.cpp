@@ -12,8 +12,8 @@
 
 /*-----------------------public function------------------*/
 
-const int MAP_GRID_NUM = 40;
-const int MAP_GRID_SIZE = 20;
+const int MAP_GRID_NUM = 40;//there are 40 * 40 grids in map
+const int MAP_GRID_SIZE = 20;//every grid is 20 * 20
 
 
 GameWindow::GameWindow(QWidget *parent)
@@ -28,20 +28,25 @@ GameWindow::GameWindow(QWidget *parent)
 
     GGtext = new QGraphicsSimpleTextItem;
     mySnake = new Snake;
+    set_Snake();
     myFood = new Food;
+
+    //creat map, wall
     creat_Map();
     creat_Wall();
-    set_Snake();
 
+    // add items to scene
     Game_Scene->addItem(mySnake->Item_Snake);
     Game_Scene->addItem(myFood->Item_Food[0]);
     Game_Scene->addItem(myFood->Item_Food[1]);
     Game_Scene->addItem(myFood->Item_Food[2]);
     Game_Scene->update();
 
+    //connect some buttons to corresponding functions
     connect(ui->startButton,SIGNAL(clicked(bool)),mySnake,SLOT(startMove()));
     connect(ui->pauseButton,SIGNAL(clicked(bool)),mySnake,SLOT(pauseMove()));
     connect(ui->restartButton,SIGNAL(clicked(bool)),this,SLOT(restartGame()));
+    connect(ui->AIButton,SIGNAL(clicked(bool)),mySnake,SLOT(AI()));
     connect(mySnake->Clock,SIGNAL(timeout()),this,SLOT(refresh_Scene()));
     connect(mySnake,&Snake::game_over,this,&GameWindow::GameOver);
 }
@@ -65,18 +70,18 @@ void GameWindow::creat_Map(){
 
 void GameWindow::creat_Wall(){
     QGraphicsRectItem* upWall_GraphicsRectItem = new QGraphicsRectItem(-403, -403, MAP_GRID_NUM*MAP_GRID_SIZE + 6, 3);
-        QGraphicsRectItem* downWall_GraphicsRectItem = new QGraphicsRectItem(-403, 400, MAP_GRID_NUM*MAP_GRID_SIZE + 6, 3);
-        QGraphicsRectItem* leftWall_GraphicsRectItem = new QGraphicsRectItem(-403, -400, 3, MAP_GRID_NUM*MAP_GRID_SIZE);
-        QGraphicsRectItem* rightWall_GraphicsRectItem = new QGraphicsRectItem(400, -400, 3, MAP_GRID_NUM*MAP_GRID_SIZE);
-        Game_Scene->addItem(upWall_GraphicsRectItem);
-        Game_Scene->addItem(downWall_GraphicsRectItem);
-        Game_Scene->addItem(leftWall_GraphicsRectItem);
-        Game_Scene->addItem(rightWall_GraphicsRectItem);
+    QGraphicsRectItem* downWall_GraphicsRectItem = new QGraphicsRectItem(-403, 400, MAP_GRID_NUM*MAP_GRID_SIZE + 6, 3);
+    QGraphicsRectItem* leftWall_GraphicsRectItem = new QGraphicsRectItem(-403, -400, 3, MAP_GRID_NUM*MAP_GRID_SIZE);
+    QGraphicsRectItem* rightWall_GraphicsRectItem = new QGraphicsRectItem(400, -400, 3, MAP_GRID_NUM*MAP_GRID_SIZE);
+    Game_Scene->addItem(upWall_GraphicsRectItem);
+    Game_Scene->addItem(downWall_GraphicsRectItem);
+    Game_Scene->addItem(leftWall_GraphicsRectItem);
+    Game_Scene->addItem(rightWall_GraphicsRectItem);
 
-        upWall_GraphicsRectItem->setBrush(QColor(Qt::black));
-        downWall_GraphicsRectItem->setBrush(QColor(Qt::black));
-        leftWall_GraphicsRectItem->setBrush(QColor(Qt::black));
-        rightWall_GraphicsRectItem->setBrush(QColor(Qt::black));
+    upWall_GraphicsRectItem->setBrush(QColor(Qt::black));
+    downWall_GraphicsRectItem->setBrush(QColor(Qt::black));
+    leftWall_GraphicsRectItem->setBrush(QColor(Qt::black));
+    rightWall_GraphicsRectItem->setBrush(QColor(Qt::black));
 }
 
 void GameWindow::set_Snake(){
@@ -84,6 +89,7 @@ void GameWindow::set_Snake(){
 }
 
 void GameWindow::keyPressEvent(QKeyEvent *event){
+    // W:up A:left S:down D:right Q:quit AI mode Esc:back to menu
     switch (event->key()) {
     case Qt::Key_W:
         if(mySnake->dir != down){
@@ -105,6 +111,13 @@ void GameWindow::keyPressEvent(QKeyEvent *event){
             mySnake->dir = right;
         }
         break;
+    case Qt::Key_Q:
+        mySnake->stop_AI();
+        break;
+    case Qt::Key_Escape:
+        mySnake->Clock->stop();
+        emit back_Menu();
+        break;
     default:
         break;
     }
@@ -116,16 +129,19 @@ void GameWindow::receive_New_Game(){
 }
 
 void GameWindow::refresh_Scene(){
+    //refresh scoreboard
     QString Scorestring  = "Score: ";
     QString ScoreNum = QString::number(mySnake->score);
     Scorestring.append(ScoreNum);
     ui->Scoreboard->setText(Scorestring);
 
+    //refresh lifeboard
     QString Lifestring = "Life: ";
     QString LifeNum = QString::number(mySnake->life);
     Lifestring.append(LifeNum);
     ui->Lifeboard->setText(Lifestring);
 
+    //refresh speedboard
     QString Speedstring = "Speed: ";
     QString Speedlevel;
     switch (mySnake->speed) {
@@ -145,9 +161,9 @@ void GameWindow::refresh_Scene(){
     Speedstring.append(Speedlevel);
     ui->Speedboard->setText(Speedstring);
 
-
+    mySnake->food = myFood;//to make we can get Food information in class Snake
     mySnake->moveSnake();
-    mySnake->check_eat(myFood);
+    mySnake->check_eat(myFood);//check whether snake eat a food
     Game_Scene->update();
 }
 
@@ -159,12 +175,8 @@ void GameWindow::GameOver(){
     Game_Scene->addItem(GGtext);
 }
 
-void GameWindow::NewGame(){
-    this->hide();
-    emit newgame();
-}
-
 void GameWindow::restartGame(){
+    //remove and new
     Game_Scene->removeItem(GGtext);
     Game_Scene->removeItem(mySnake->Item_Snake);
     Game_Scene->removeItem(myFood->Item_Food[0]);
@@ -176,6 +188,9 @@ void GameWindow::restartGame(){
     mySnake = new Snake;
     myFood = new Food;
     mySnake->setSnake();
+    mySnake->score = 0;
+    mySnake->speed = 100;
+    mySnake->life = 1;
     Game_Scene->addItem(mySnake->Item_Snake);
     Game_Scene->addItem(myFood->Item_Food[0]);
     Game_Scene->addItem(myFood->Item_Food[1]);
@@ -184,6 +199,7 @@ void GameWindow::restartGame(){
     connect(ui->startButton,SIGNAL(clicked(bool)),mySnake,SLOT(startMove()));
     connect(ui->pauseButton,SIGNAL(clicked(bool)),mySnake,SLOT(pauseMove()));
     connect(ui->restartButton,SIGNAL(clicked(bool)),this,SLOT(restartGame()));
+    connect(ui->AIButton,SIGNAL(clicked(bool)),mySnake,SLOT(AI(Food *food)));
     connect(mySnake->Clock,SIGNAL(timeout()),this,SLOT(refresh_Scene()));
     connect(mySnake,&Snake::game_over,this,&GameWindow::GameOver);
 }

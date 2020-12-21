@@ -8,6 +8,7 @@
 #include <ui_mainwindow.h>
 #include "GameWindow.h"
 #include "pvpgame.h"
+#include "pvagame.h"
 
 
 class QGraphicsScene;
@@ -20,14 +21,13 @@ class MainWindow:public QMainWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    void dealJump();
 private slots:
-    void new_Game();
-    void read_Archive();
-    void Exit();
+    void new_Game();//new single game
+    void read_Archive();//read archive
+    void Exit();//exit the game
     void Enter_settings();
-    void new_gwindow();
-    void PVP_Game();
+    void PVP_Game();//enter PVP
+    void show_Menu();
 signals:
     void show_new_Game();
     void show_PVP_Game();
@@ -35,8 +35,9 @@ signals:
     void show_settings();
 private:
     Ui::MainWindow *ui;
+    GameWindow *gwindow;//single game
+    PVPGame *pgame;//PVP game
     void set_Button();
-    GameWindow *gwindow,*ngwindow;
-    PVPGame *pgame;
+
 };
 #endif // MAINWINDOW_H
