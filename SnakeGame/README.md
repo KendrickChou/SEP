@@ -1,8 +1,8 @@
-#SnakeGame
+# SnakeGame
 Author:Kendrick Chou / 519021911217
 SJTU SEP Proj1
 
-## Completed Tasks###
+## Completed Tasks
 ### 1.Basic
 - Start Menu
 - Display and Move of Snake
