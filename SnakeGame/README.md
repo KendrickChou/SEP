@@ -18,7 +18,7 @@ SJTU SEP Proj1
     (SPEED LEVEl: SLOW NORMAL HIGH sHigh).
     - Double score.(White Ps: It is hard to discover double food)
 - AI-Snake:
-    - Using BFS Algorithm, treated all fruits equally. 
+    - Using BFS Algorithm.
     - You can enter AI mode in single mode by click the Snake Icon
     - Press 'q' to quit AI mode.
     
